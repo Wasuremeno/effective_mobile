@@ -10,7 +10,10 @@
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
         "lint:check": "eslint .",
-        "types:check": "tsc --noEmit"
+        "types:check": "tsc --noEmit",
+        "test:api": "newman run postman/collections/task-management-api.postman_collection.json -e postman/environments/local.postman_environment.json",
+        "test:api:report": "newman run postman/collections/task-management-api.postman_collection.json -e postman/environments/local.postman_environment.json -r cli,json --reporter-json-export postman/reports/api-test-report.json",
+        "test:api:html": "newman run postman/collections/task-management-api.postman_collection.json -e postman/environments/local.postman_environment.json -r htmlextra --reporter-htmlextra-export postman/reports/api-test-report.html"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
