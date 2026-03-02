@@ -3,130 +3,135 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\User;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class TaskApiTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
 
-    protected $user;
-    protected $token;
-
-    protected function setUp(): void
+// Test GET /api/tasks
+    
+    public function test_can_get_all_tasks(): void
     {
-        parent::setUp();
-        
-        // Create a user and generate token
-        $this->user = User::factory()->create();
-        $this->token = $this->user->createToken('test-token')->plainTextToken;
-    }
+        Task::factory()->count(3)->create();
 
-    /** @test */
-    public function can_get_all_tasks()
-    {
-        // Create some tasks
-        Task::factory()->count(3)->create(['user_id' => $this->user->id]);
-        
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
-            'Accept' => 'application/json',
-        ])->getJson('/api/tasks');
-        
+        $response = $this->getJson('/api/tasks');
+
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         '*' => ['id', 'title', 'description', 'status', 'created_at', 'updated_at']
-                     ]
-                 ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    '*' => ['id', 'title', 'description', 'status', 'created_at', 'updated_at']
+                ]
+            ]);
     }
 
-    /** @test */
-    public function can_create_task()
+//  Test POST /api/tasks
+     
+    public function test_can_create_task(): void
     {
         $taskData = [
-            'title' => 'Complete project documentation',
-            'description' => 'Write comprehensive API documentation for the task management system',
+            'title' => 'Test Task',
+            'description' => 'Test Description',
             'status' => 'pending'
         ];
-        
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
-            'Accept' => 'application/json',
-        ])->postJson('/api/tasks', $taskData);
-        
+
+        $response = $this->postJson('/api/tasks', $taskData);
+
         $response->assertStatus(201)
-                 ->assertJson([
-                     'data' => [
-                         'title' => $taskData['title'],
-                         'description' => $taskData['description'],
-                         'status' => $taskData['status']
-                     ]
-                 ]);
+            ->assertJson([
+                'success' => true,
+                'message' => 'Task created successfully'
+            ])
+            ->assertJsonPath('data.title', 'Test Task');
+
+        $this->assertDatabaseHas('tasks', $taskData);
+    }
+
+// Test POST /api/tasks with validation error
+  
+    public function test_cannot_create_task_without_title(): void
+    {
+        $response = $this->postJson('/api/tasks', [
+            'description' => 'Test Description'
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['title']);
+    }
+
+    // Test GET /api/tasks/{id}
+     
+    public function test_can_get_single_task(): void
+    {
+        $task = Task::factory()->create();
+
+        $response = $this->getJson("/api/tasks/{$task->id}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'id' => $task->id,
+                    'title' => $task->title
+                ]
+            ]);
+    }
+
+//  Test GET /api/tasks/{id} with non-existent task
+     
+    public function test_cannot_get_non_existent_task(): void
+    {
+        $response = $this->getJson('/api/tasks/99999');
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Task not found'
+            ]);
+    }
+
+//   Test PUT /api/tasks/{id}
+     
+    public function test_can_update_task(): void
+    {
+        $task = Task::factory()->create();
         
+        $updatedData = [
+            'title' => 'Updated Title',
+            'status' => 'completed'
+        ];
+
+        $response = $this->putJson("/api/tasks/{$task->id}", $updatedData);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Task updated successfully'
+            ]);
+
         $this->assertDatabaseHas('tasks', [
-            'title' => $taskData['title'],
-            'user_id' => $this->user->id
+            'id' => $task->id,
+            'title' => 'Updated Title',
+            'status' => 'completed'
         ]);
     }
 
-    /** @test */
-    public function can_get_single_task()
+    //   Test DELETE /api/tasks/{id}
+   
+    public function test_can_delete_task(): void
     {
-        $task = Task::factory()->create(['user_id' => $this->user->id]);
-        
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
-            'Accept' => 'application/json',
-        ])->getJson("/api/tasks/{$task->id}");
-        
-        $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'id' => $task->id,
-                         'title' => $task->title
-                     ]
-                 ]);
-    }
+        $task = Task::factory()->create();
 
-    /** @test */
-    public function can_update_task()
-    {
-        $task = Task::factory()->create(['user_id' => $this->user->id]);
-        
-        $updateData = [
-            'title' => 'Updated task title',
-            'status' => 'in_progress'
-        ];
-        
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
-            'Accept' => 'application/json',
-        ])->putJson("/api/tasks/{$task->id}", $updateData);
-        
-        $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'title' => $updateData['title'],
-                         'status' => $updateData['status']
-                     ]
-                 ]);
-    }
+        $response = $this->deleteJson("/api/tasks/{$task->id}");
 
-    /** @test */
-    public function can_delete_task()
-    {
-        $task = Task::factory()->create(['user_id' => $this->user->id]);
-        
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
-            'Accept' => 'application/json',
-        ])->deleteJson("/api/tasks/{$task->id}");
-        
-        $response->assertStatus(204);
-        
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Task deleted successfully'
+            ]);
+
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
 }
