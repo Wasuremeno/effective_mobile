@@ -1,0 +1,10 @@
+{
+  "collection": "./collections/task-management-api.postman_collection.json",
+  "environment": "./environments/local.postman_environment.json",
+  "reporters": ["cli", "json"],
+  "reporter": {
+    "json": {
+      "output": "./reports/api-test-report.json"
+    }
+  }
+}
