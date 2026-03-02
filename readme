@@ -18,9 +18,25 @@
 - Node.js & NPM
 - SQLite
 
+
+## Postman
+<img src="screenshot.png" alt="Task Management API Screenshot" width="600"/>
+
+
+
 ## Installation
 
 1. Clone the repository:
 ```bash
 git clone https://github.com/Wasuremeno/effective_mobile.git
 cd effective_mobile
+php artisan key:generate
+composer install
+npm install
+php artisan migrate:fresh --seed
+php artisan serve
+php artisan test
+# или сразу API tests
+php artisan test --filter TaskApiTest
+# еще можно через Newman запустить Postman tests
+npm run test:api
