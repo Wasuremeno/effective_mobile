@@ -1,0 +1,26 @@
+# Task Management API
+
+тестовое задание для efficient mobile
+
+## Tech Stack
+
+- Laravel 12.53.0
+- Inertia 2.3.17
+- TailwindCSS 4.2.1
+- React 19.2.4
+- TypeScript 5.9.3
+- Vite 7.3.1
+
+## Requirements
+
+- PHP 8.2 or higher
+- Composer
+- Node.js & NPM
+- SQLite
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Wasuremeno/effective_mobile.git
+cd effective_mobile

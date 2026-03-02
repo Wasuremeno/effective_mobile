@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18bb173ae40b0b8a23fa689607172961",
+    "content-hash": "cf39c368097c783750707bb177dfd687",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2382,6 +2382,70 @@
                 }
             ],
             "time": "2026-01-15T06:54:53+00:00"
+        },
+        {
+            "name": "mirxan/postman-exporter",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mirxan/laravel-postman-exporter.git",
+                "reference": "2ee15d8529bed8fbfcf4bd518c515577d971a0d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mirxan/laravel-postman-exporter/zipball/2ee15d8529bed8fbfcf4bd518c515577d971a0d3",
+                "reference": "2ee15d8529bed8fbfcf4bd518c515577d971a0d3",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "php": "^8.0 || ^8.1 || ^8.2 || ^8.3 || ^8.4"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/larastan": "^2.0",
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mirxan\\PostmanExporter\\PostmanServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mirxan\\PostmanExporter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Muhammadamin Nematov",
+                    "email": "mirxan085@gmail.com"
+                }
+            ],
+            "description": "Laravel API to Postman Collection exporter with comment-driven customization",
+            "homepage": "https://github.com/mirxan/laravel-postman-exporter",
+            "keywords": [
+                "Postman",
+                "api",
+                "collection",
+                "exporter",
+                "generator",
+                "json",
+                "laravel"
+            ],
+            "support": {
+                "email": "mirxan085@gmail.com",
+                "issues": "https://github.com/mirxan/laravel-postman-exporter/issues",
+                "source": "https://github.com/mirxan/laravel-postman-exporter"
+            },
+            "time": "2025-08-29T04:04:30+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -8908,12 +8972,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
